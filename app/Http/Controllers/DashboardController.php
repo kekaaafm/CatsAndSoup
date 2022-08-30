@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Values;
+use Illuminate\Support\Facades\DB;
+
 class DashboardController extends Controller
 {
 
     public function show(){
-        return view('dashboard', []);
+        $data = DB::table("values")
+            ->select("*")
+            ->orderBy("date")
+            ->orderBy("value")
+            ->get();
+
+        $values = new Values($data);
+
+        return view('dashboard', ["values" => $values]);
     }
 
     public function process(){

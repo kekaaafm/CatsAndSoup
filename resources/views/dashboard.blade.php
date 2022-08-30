@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $values
+ * @var $loop
+ * */
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,9 +33,6 @@
         <th>Gain Syleam</th>
         <th>Gain Mark</th>
         <th></th>
-        <th>Moy 1j Syleam</th>
-        <th>Moy 1j Mark</th>
-        <th></th>
         <th>Moy 3j Syleam</th>
         <th>Moy 3j Mark</th>
         <th></th>
@@ -37,27 +41,24 @@
     </tr>
     </thead>
     <tbody>
-        @for($i=0;$i<5;$i++)
+        @foreach($values->dataset as $value)
         <tr>
-            <td>19/08</td>
-            <td style="color: #2ca02c">6062</td>
-            <td>2170</td>
-            <td>3892</td>
-            <td>-</td>
-            <td></td>
-            <td>-</td>
-            <td>-</td>
-            <td></td>
-            <td>-</td>
-            <td>-</td>
-            <td></td>
-            <td>-</td>
-            <td>-</td>
-            <td></td>
-            <td>-</td>
-            <td>-</td>
+            <td>{{ $value['date'] }}</td>
+            <td>{{ $value['Syleam'] }}</td>
+            <td>{{ $value['Marketing'] }}</td>
+            <td>{{ $value['diff_tot'] }}</td>
+            <td>{{ $value['gain_veille']??"-" }}</td>
+            <td></td> {{-- Empty --}}
+            <td>{{ $value['gain_syleam']??"-" }}</td>
+            <td>{{ $value['gain_marketing']??"-" }}</td>
+            <td></td> {{-- Empty --}}
+            <td>{{ $value['moy_3d_syleam']??"-" }}</td>
+            <td>{{ $value['moy_3d_marketing']??"-" }}</td>
+            <td></td> {{-- Empty --}}
+            <td>{{ $value['eta']??"-" }}</td>
+            <td>{{ $value['eta_3d']??"-" }}</td>
         </tr>
-        @endfor
+        @endforeach
     </tbody>
 </table>
 
