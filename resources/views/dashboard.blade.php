@@ -44,19 +44,19 @@
         @foreach($values->dataset as $value)
         <tr>
             <td>{{ $value['date'] }}</td>
-            <td>{{ $value['Syleam'] }}</td>
-            <td>{{ $value['Marketing'] }}</td>
+            <td style="color: @if($value['Syleam']>$value['Marketing']) #2ca02c @endif">{{ $value['Syleam'] }}</td>
+            <td style="color: @if($value['Syleam']<$value['Marketing']) #2ca02c @endif">{{ $value['Marketing'] }}</td>
             <td>{{ $value['diff_tot'] }}</td>
-            <td>{{ $value['gain_veille']??"-" }}</td>
+            <td style="color: @if(($value['gain_veille']??0)<0) #2ca02c @elseif(isset($value['gain_veille'])) #AA3333 @endif">{{ $value['gain_veille']??"-" }}</td>
             <td></td> {{-- Empty --}}
-            <td>{{ $value['gain_syleam']??"-" }}</td>
-            <td>{{ $value['gain_marketing']??"-" }}</td>
+            <td style="color: @if(isset($value['gain_syleam']) && $value['gain_syleam']>$value['gain_marketing']) #2ca02c @endif">{{ $value['gain_syleam']??"-" }}</td>
+            <td style="color: @if(isset($value['gain_syleam']) && $value['gain_syleam']<$value['gain_marketing']) #2ca02c @endif">{{ $value['gain_marketing']??"-" }}</td>
             <td></td> {{-- Empty --}}
-            <td>{{ $value['moy_3d_syleam']??"-" }}</td>
-            <td>{{ $value['moy_3d_marketing']??"-" }}</td>
+            <td>{{ isset($value['moy_3d_syleam'])?round($value['moy_3d_syleam'],2):"-" }}</td>
+            <td>{{ isset($value['moy_3d_marketing'])?round($value['moy_3d_marketing'],2):"-" }}</td>
             <td></td> {{-- Empty --}}
-            <td>{{ $value['eta']??"-" }}</td>
-            <td>{{ $value['eta_3d']??"-" }}</td>
+            <td>{{ isset($value['eta'])?round($value['eta'],2):"-" }}</td>
+            <td>{{ isset($value['eta_3d'])?round($value['eta_3d'],2):"-" }}</td>
         </tr>
         @endforeach
     </tbody>
