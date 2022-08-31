@@ -1,8 +1,15 @@
 <?php
 /**
- * @var array $values
+ * @var Date $value
+ * @var Dataset $dataset
  * @var $loop
  * */
+
+use App\Models\Dataset;
+use App\Models\Date;
+
+$tot = 0;
+
 ?>
 
 <!DOCTYPE html>
@@ -41,30 +48,35 @@
     </tr>
     </thead>
     <tbody>
-    @foreach($values->dataset as $value)
+    @foreach($dataset->getDataset() as $value)
+        <?php
+        $tot += $dataset->gainVeille($value->date) ?? "0";
+        //            dump($tot)
+        ?>
         <tr>
-            <td>{{ $value['date'] }}</td>
-            <td style="color: @if($value['Syleam']>$value['Marketing']) #2ca02c @endif">{{ $value['Syleam'] }}</td>
-            <td style="color: @if($value['Syleam']<$value['Marketing']) #2ca02c @endif">{{ $value['Marketing'] }}</td>
-            <td style="color: @if(($value['gain_veille']??0)<0) #2ca02c @elseif(isset($value['gain_veille'])) #AA3333 @endif">{{ $value['gain_veille']??"-" }}</td>
-            <td>{{ $value['diff_tot'] }}</td>
+            <td>{{ $value->getFormattedDate() }}</td>
+            <td style="color: @if($dataset->getFallbackValue($value->date, "syleam")>$dataset->getFallbackValue($value->date, "marketing")) #2ca02c @endif">{{ $dataset->getFallbackValue($value->date, "syleam")??"-" }}</td>
+            <td style="color: @if($dataset->getFallbackValue($value->date, "syleam")<$dataset->getFallbackValue($value->date, "marketing")) #2ca02c @endif">{{ $dataset->getFallbackValue($value->date, "marketing")??"-" }}</td>
+            <td style="color: @if(($dataset->gainVeille($value->date)??0)<0) #2ca02c @elseif($dataset->gainVeille($value->date)) #AA3333 @endif">{{ $dataset->gainVeille($value->date)??"-" }}</td>
+            <td>{{ $dataset->getDiff($value->date)??"-" }}</td>
             <td></td> {{-- Empty --}}
-            <td style="color: @if(isset($value['gain_syleam']) && $value['gain_syleam']>$value['gain_marketing']) #2ca02c @endif">{{ $value['gain_syleam']??"-" }}</td>
-            <td style="color: @if(isset($value['gain_syleam']) && $value['gain_syleam']<$value['gain_marketing']) #2ca02c @endif">{{ $value['gain_marketing']??"-" }}</td>
+            <td style="color: @if($dataset->gainUser($value->date, "syleam")>$dataset->gainUser($value->date, "marketing")) #2ca02c @endif">{{ $dataset->gainUser($value->date, "syleam")??"-" }}</td>
+            <td style="color: @if($dataset->gainUser($value->date, "syleam")<$dataset->gainUser($value->date, "marketing")) #2ca02c @endif">{{ $dataset->gainUser($value->date, "marketing")??"-" }}</td>
             <td></td> {{-- Empty --}}
-            <td>{{ isset($value['moy_3d_syleam'])?round($value['moy_3d_syleam'],2):"-" }}</td>
-            <td>{{ isset($value['moy_3d_marketing'])?round($value['moy_3d_marketing'],2):"-" }}</td>
+            <td style="color: @if($dataset->getAverage($value->date, "syleam")>$dataset->getAverage($value->date, "marketing")) #2ca02c @endif">{{ $dataset->getAverage($value->date, "syleam")??"-" }}</td>
+            <td style="color: @if($dataset->getAverage($value->date, "syleam")<$dataset->getAverage($value->date, "marketing")) #2ca02c @endif">{{ $dataset->getAverage($value->date, "marketing")??"-" }}</td>
             <td></td> {{-- Empty --}}
-            <td style="color: @if(isset($value['eta']) and $value['eta']<0) #AA3333 @endif">{{ isset($value['eta'])?round($value['eta'],2):"-" }}</td>
-            <td style="color: @if(isset($value['eta_3d']) and $value['eta_3d']<0) #AA3333 @endif">{{ isset($value['eta_3d'])?round($value['eta_3d'],2):"-" }}</td>
+            <td style="color: @if($dataset->eta($value->date)<0) #AA3333 @elseif($dataset->eta($value->date)) #2ca02c  @endif">{{ $dataset->eta($value->date)??"-" }}</td>
+            <td {{--style="color: @if(isset($value['eta_3d']) and $value['eta_3d']<0) #AA3333 @endif"--}}>{{ $dataset->etaWithAverage($value->date)??"-" }}</td>
         </tr>
     @endforeach
     <tr>
         <td>Total</td>
         <td></td>
         <td></td>
-        <td style="color: @if($values->gainsTotaux<0) #2ca02c @else #AA3333 @endif">{{ $values->gainsTotaux }}</td>
-    </tr>
+        <td style=" color: @if($tot<0) #2ca02c @else #AA3333 @endif">{{ $tot }}</td>
+            {{--        <td style="color: @if($values->gainsTotaux<0) #2ca02c @else #AA3333 @endif">{{ $values->gainsTotaux }}</td>--}}
+        </tr>
     </tbody>
 </table>
 

@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Values;
+use App\Models\Dataset;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
 
-    public function show(){
-        $data = DB::table("values")
-            ->select("*")
-            ->orderBy("date")
-            ->orderBy("value")
-            ->get();
+    public function show(?string $date = null)
+    {
+        $date = new Carbon($date);
+        $dataset = new Dataset($date);
 
-        $values = new Values($data);
-
-        return view('dashboard', ["values" => $values]);
+        return view('dashboard', ["dataset" => $dataset]);
     }
 
     public function process(){
