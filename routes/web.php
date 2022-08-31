@@ -14,8 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [DashboardController::class, 'show'])
-    ->name('dashboard');
+Route::get('/{date?}', [DashboardController::class, 'show'])
+    ->name('dashboard')
+    ->where("date", '[a-zA-Z0-9\-]+');
 
-Route::post('/', [DashboardController::class, 'process'])
+Route::post('/{date}', [DashboardController::class, 'process'])
     ->name("dashboard_process");
