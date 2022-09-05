@@ -24,6 +24,7 @@ class Dataset extends Model
         $r = DB::table('values')
             ->select("date")
             ->where("date", "<=", $date->toDateString())
+            ->orderBy("date")
             ->groupBy("date")
             ->get();
 
